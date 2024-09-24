@@ -15,7 +15,8 @@ export const ROUTES: RouteInfo[] = [
   { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
   { path: '/table-list-a', title: 'Outgoing Settlements A',  icon:'content_paste', class: '' },
   { path: '/table-list-b', title: 'Outgoing Settlements B',  icon:'content_paste', class: '' },
-  { path: '/trade-settle', title: 'Trade Settlement',  icon:'query_builder', class: '' }
+  { path: '/trade-settle', title: 'Trade Settlement',  icon:'query_builder', class: '' },
+  { path: '/manage-trades', title: 'Manage Trades',  icon:'settings_backup_restore', class: '' },
 //    { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
 //    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
 ];

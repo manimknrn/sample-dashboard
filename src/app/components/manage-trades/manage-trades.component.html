@@ -1,0 +1,12 @@
+<div class="main-content">
+    <div class="container-fluid">
+        @if(totalDataCount > 0) {
+        <app-general-table [columns]="columns" [data]="data" [currentPage]="currentPage"
+            [totalDataCount]="totalDataCount" (loadData)="loadData($event)" [pageSize]="10"
+            [pagination]="[10,25,50,100]" [buttons]="buttons" (buttonClick)="buttonClick($event)"
+            [actionHeader]="'Actions'" (actionFeature)="actionFeature($event)" [actionFeatureLabel]="'Create'"
+            [actionFeatureFlag]="true">
+        </app-general-table>
+        }
+    </div>
+</div>

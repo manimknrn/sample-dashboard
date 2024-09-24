@@ -10,6 +10,7 @@ import { TableListComponentB } from './table-list-b/table-list.component';
 import { TypographyComponent } from './typography/typography.component';
 import { UpgradeComponent } from './upgrade/upgrade.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { TradeSettlementComponent } from './trade-settlement/trade-settlement.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,8 @@ export const routes: Routes = [
     { path: 'table-list-a', component: TableListComponentA },
     { path: 'table-list-b', component: TableListComponentB },
     { path: 'trade-settle', loadComponent: () => import('./trade-settlement/trade-settlement.component').then(c => c.TradeSettlementComponent) },
+    { path: 'manage-trades', loadComponent: () => import('./components/manage-trades/manage-trades.component').then(c => c.ManageTradesComponent) },
+    { path: 'trade-settle/:id', component: TradeSettlementComponent },
     { path: 'typography', component: TypographyComponent },
     { path: 'icons', component: IconsComponent },
     { path: 'maps', component: MapsComponent },

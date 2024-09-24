@@ -1,0 +1,25 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "stockSymbol": "USD",
+            "quantity": 1,
+            "price": 1,
+            "notes": "test notes",
+            "settlementDate": "Sep 5, 2024",
+            "paymentMethod": "bankTransfer",
+            "transactionFee": 56
+        },
+        {
+            "id": 2,
+            "stockSymbol": "EUR",
+            "quantity": 10,
+            "price": 100,
+            "notes": "notes info",
+            "settlementDate": "Sep 13, 2024",
+            "paymentMethod": "creditCard",
+            "transactionFee": 200
+        }
+    ],
+    "totalRecords": 2
+}
