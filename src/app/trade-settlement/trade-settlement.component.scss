@@ -1,0 +1,43 @@
+mat-horizontal-stepper-header-container {
+    margin-bottom: 20px;
+}
+
+::ng-deep .mat-horizontal-stepper-wrapper {
+    gap: 32px !important;
+}
+
+mat-form-field {
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.review {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+
+    nav {
+        display: flex;
+        flex: 0 1 30%;
+
+        .title {
+            font-weight: 600;
+        }
+
+        div {
+            flex: 0 1 50%;
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 24px;
+}
+
+.form {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}

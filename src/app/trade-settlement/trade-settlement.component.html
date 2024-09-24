@@ -1,0 +1,115 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <mat-horizontal-stepper linear>
+            <mat-step [stepControl]="firstFormGroup" label="Stock Details">
+                <form [formGroup]="firstFormGroup">
+                    <div class="form">
+                        <div>
+                            <app-text-input label="Stock Symbol" placeholder="Ex: USD"
+                                [control]="getControl('stockSymbol')" [required]="true"></app-text-input>
+                            <!-- <div
+                                *ngIf="firstFormGroup.get('stockSymbol')?.invalid && firstFormGroup.get('stockSymbol')?.touched">
+                                <mat-error class="error-message">{{ getErrorMessage('stockSymbol') }}</mat-error>
+                            </div> -->
+                        </div>
+                        <div>
+                            <app-number-input label="Quantity" placeholder="Enter quantity"
+                                [control]="getControl('quantity')" [required]="true"></app-number-input>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button mat-button matStepperNext [disabled]="firstFormGroup?.invalid">Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="secondFormGroup" label="Price Details">
+                <form [formGroup]="secondFormGroup">
+                    <div class="form">
+                        <div>
+                            <app-number-input label="Price" placeholder="Enter price"
+                                [control]="getSecondFormControl('price')" [required]="true"></app-number-input>
+                        </div>
+                        <div>
+                            <app-text-input label="Notes" placeholder="Enter any notes"
+                                [control]="getSecondFormControl('notes')"></app-text-input>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext [disabled]="secondFormGroup?.invalid">Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="settlementFormGroup" label="Trade Settlement">
+                <form [formGroup]="settlementFormGroup">
+                    <div class="form">
+                        <div>
+                            <app-date-input label="Settlement Date"
+                                [control]="getSettlementFormControl('settlementDate')"
+                                [required]="true"></app-date-input>
+                        </div>
+                        <div>
+                            <app-select-input label="Payment Method"
+                                [control]="getSettlementFormControl('paymentMethod')" [options]="paymentMethods"
+                                [required]="true"></app-select-input>
+                        </div>
+                        <div>
+                            <app-number-input label="Transaction Fee" placeholder="Enter transaction fee"
+                                [control]="getSettlementFormControl('transactionFee')"
+                                [required]="true"></app-number-input>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext [disabled]="settlementFormGroup.invalid">Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step label="Review and Submit">
+                <h3>Review Your Submission</h3>
+                <div class="review">
+                    <nav>
+                        <div class="title">
+                            Stock Symbol
+                        </div>
+                        <div>{{ firstFormGroup?.get('stockSymbol')?.value }}</div>
+                    </nav>
+                    <nav>
+                        <div class="title">Quantity</div>
+                        <div>{{ firstFormGroup?.get('quantity')?.value }}</div>
+                    </nav>
+                    <nav>
+                        <div class="title">Price </div>
+                        <div>{{ secondFormGroup?.get('price')?.value }}</div>
+                    </nav>
+                    <nav>
+                        <div class="title">Notes</div>
+                        <div> {{ secondFormGroup?.get('notes')?.value || 'None' }}</div>
+                    </nav>
+                    <nav>
+                        <div class="title">Settlement Date</div>
+                        <div> {{ settlementFormGroup?.get('settlementDate')?.value | date
+                            }}
+                        </div>
+                    </nav>
+                    <nav>
+                        <div class="title">Payment Method</div>
+                        <div> {{ settlementFormGroup?.get('paymentMethod')?.value }}</div>
+                    </nav>
+                    <nav>
+                        <div class="title">Transaction Fee</div>
+                        <div> {{ settlementFormGroup?.get('transactionFee')?.value }}</div>
+                    </nav>
+                </div>
+                <div class="actions">
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="onSubmit()">Submit</button>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+</div>
