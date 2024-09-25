@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { TableColumn } from '../shared/models/table.column';
 import { TableBtn } from '../shared/models/table-button';
 import { TradeService } from '../../services/trade.service';
 import { Trade } from '../shared/models/trade.model';
+import { TradeSettlementService } from '../../services/trade-settlement.service';
 
 @Component({
   selector: 'app-manage-trades',
@@ -17,7 +18,8 @@ import { Trade } from '../shared/models/trade.model';
   imports: [MatTableModule, GeneralTableComponent, FormsModule, ReactiveFormsModule, CommonModule],
   standalone: true,
   providers: [
-    TradeService
+    TradeService,
+    TradeSettlementService
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -36,9 +38,13 @@ export class ManageTradesComponent implements OnInit {
   actionHeader: string = '';
   filterPlaceholder: string = '';
   dataSource = [];
+  settlementService = inject(TradeSettlementService)
 
   constructor(private tradeService: TradeService, public dialog: MatDialog, readonly router: Router) {
-    this.render(this.pageList, '');
+    // this.render(this.pageList, '');
+    this.settlementService.getTradeSettlements().subscribe((data) => {
+      this.data = data;
+    });
     this.columns = [
       { columnDef: 'id', header: 'ID', cell: (element: Trade) => `${element.id}` },
       { columnDef: 'stockSymbol', header: 'Stock Symbol', cell: (element: Trade) => `${element.stockSymbol}` },

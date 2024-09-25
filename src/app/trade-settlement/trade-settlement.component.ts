@@ -118,12 +118,21 @@ export class TradeSettlementComponent {
     const formattedDate = this.datePipe.transform(
       data.settlementDate,
       'yyyy-MM-dd'
-    ); // Change the format as needed
+    );
+    const formattedExpiryDate = this.datePipe.transform(
+      data.expiryDate,
+      'yyyy-MM-dd'
+    );
     this.secondFormGroup.patchValue({
       settlementDate: formattedDate,
     });
+    this.creditCardFormGroup.patchValue({
+      expiryDate: formattedExpiryDate,
+    });
     this.secondFormGroup.patchValue(data);
     this.settlementFormGroup.patchValue(data);
+    this.creditCardFormGroup.patchValue(data);
+    this.bankTransferFormGroup.patchValue(data);
   }
 
   // ngAfterViewInit(): void {

@@ -150,6 +150,43 @@
             <div class="title">Transaction Fee</div>
             <div>{{ settlementFormGroup?.get("transactionFee")?.value }}</div>
           </nav>
+          @if(shouldShowBankTransferFields()){
+            <nav>
+              <div class="title">Bank Name</div>
+              <div>
+                {{ bankTransferFormGroup?.get("bankName")?.value }}
+              </div>
+            </nav>
+            <nav>
+              <div class="title">Customer ID</div>
+              <div>{{ bankTransferFormGroup?.get("customerId")?.value }}</div>
+            </nav>
+            <nav>
+              <div class="title">Password</div>
+              <div>{{ bankTransferFormGroup?.get("password")?.value }}</div>
+            </nav>
+          }
+
+          @if(shouldShowCreditCardFields()){
+            <nav>
+              <div class="title">Card Number</div>
+              <div>
+                {{ creditCardFormGroup?.get("cardNumber")?.value }}
+              </div>
+            </nav>
+            <nav>
+              <div class="title">Expiry Date</div>
+              <div>{{ creditCardFormGroup?.get("expiryDate")?.value | date }}</div>
+            </nav>
+            <nav>
+              <div class="title">Name on Card</div>
+              <div>{{ creditCardFormGroup?.get("cardName")?.value }}</div>
+            </nav>
+            <nav>
+              <div class="title">CVV</div>
+              <div>{{ creditCardFormGroup?.get("cvv")?.value }}</div>
+            </nav>
+          }
         </div>
         <div class="actions">
           <button mat-button matStepperPrevious>Back</button>

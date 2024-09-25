@@ -7,4 +7,11 @@ export interface Trade {
   settlementDate?: string;
   paymentMethod: string;
   transactionFee?: number;
+  cardNumber?: string;
+  expiryDate?: string;
+  cardName?: string;
+  cvv?: string;
+  bankName?: string;
+  customerId?: string;
+  password?: string;
 }

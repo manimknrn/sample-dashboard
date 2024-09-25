@@ -18,8 +18,24 @@
             "notes": "notes info",
             "settlementDate": "Sep 13, 2024",
             "paymentMethod": "creditCard",
-            "transactionFee": 200
+            "transactionFee": 200,
+            "cardNumber": "2222333344445555",
+            "expiryDate": "Sep 12, 2025",
+            "cardName": "Manikandan Manoharan",
+            "cvv": "123"
+        },
+        {
+            "id": 3,
+            "stockSymbol": "INR",
+            "quantity": 1,
+            "price": 1,
+            "notes": "Indian Notes",
+            "settlementDate": "Sep 5, 2024",
+            "paymentMethod": "bankTransfer",
+            "transactionFee": 56,
+            "bankName": "axis",
+            "customerId": "543216789",
+            "password": "HelloBuddy!"
         }
-    ],
-    "totalRecords": 2
+    ]
 }
