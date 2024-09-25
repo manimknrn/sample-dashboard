@@ -18,8 +18,7 @@ import { TradeSettlementService } from '../../services/trade-settlement.service'
   imports: [MatTableModule, GeneralTableComponent, FormsModule, ReactiveFormsModule, CommonModule],
   standalone: true,
   providers: [
-    TradeService,
-    TradeSettlementService
+    TradeService
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -41,10 +40,6 @@ export class ManageTradesComponent implements OnInit {
   settlementService = inject(TradeSettlementService)
 
   constructor(private tradeService: TradeService, public dialog: MatDialog, readonly router: Router) {
-    // this.render(this.pageList, '');
-    this.settlementService.getTradeSettlements().subscribe((data) => {
-      this.data = data;
-    });
     this.columns = [
       { columnDef: 'id', header: 'ID', cell: (element: Trade) => `${element.id}` },
       { columnDef: 'stockSymbol', header: 'Stock Symbol', cell: (element: Trade) => `${element.stockSymbol}` },
@@ -64,7 +59,8 @@ export class ManageTradesComponent implements OnInit {
     this.actionHeader = 'New Trade';
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.render(this.pageList, ''); // Await the call if needed
   }
 
   render(value: any, searchFilter?: string) {
@@ -74,12 +70,18 @@ export class ManageTradesComponent implements OnInit {
       this.totalDataCount = this.data.length;
     } else {
       this.tradeService.getTrades().subscribe((res: any) => {
-        this.data = !!res ? res.data : [];
+        this.data = !!res ? res : [];
         localStorage.setItem('tradeSettlementData', JSON.stringify(this.data));
-        this.totalDataCount = res.data.length;
+        this.totalDataCount = res.length;
       });
     }
+
+    if(this.data.length === 0) {
+      this.data = JSON.parse(localStorageData);
+      this.totalDataCount = this.data.length;
+    }
   }
+
 
   loadData(value: any) {
     let val = {
@@ -98,23 +100,23 @@ export class ManageTradesComponent implements OnInit {
     }
   }
 
-  getTradeSettlementData() {
-    const data = localStorage.getItem('tradeSettlementData');
-    return data ? JSON.parse(data) : { data: [] };
-  }
 
   deleteTrade(id: number): void {
     window.alert('Are you sure, You want to delete this record!');
-    let existingData = this.getTradeSettlementData();
-    existingData = existingData.filter((item: Trade) => item.id !== id); // Remove the entry with the given id
+    let existingData = this.data;
+    existingData = existingData.filter((item: Trade) => Number(item.id) !== id); // Remove the entry with the given id
     this.data = existingData;
     this.totalDataCount = existingData.length;
     localStorage.setItem('tradeSettlementData', JSON.stringify(existingData));
+    this.tradeService.deleteTrade(id).subscribe((res: any) => {
+      this.render('');
+    })
   }
 
   editTrade(id: number): void {
-    const tradeSettleData = this.data.find(trade => trade.id == id);
-    this.router.navigate(['/trade-settle'], { state: { data: tradeSettleData } });
+    this.tradeService.getTradeById(id).subscribe((res: any) => {
+      this.router.navigate(['/trade-settle'], { state: { data: res } });
+    })
   }
 
   actionFeature(event: any) {

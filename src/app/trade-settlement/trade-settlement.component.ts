@@ -13,6 +13,7 @@ import { TextInputComponent } from '../components/shared/components/text-input/t
 import { ActivatedRoute, Router } from '@angular/router';
 import { Trade } from '../components/shared/models/trade.model';
 import { creditCardValidator } from '../components/shared/custom-validators/credit-card-validator';
+import { TradeService } from '../services/trade.service';
 
 @Component({
   selector: 'app-trade-settlement',
@@ -56,6 +57,8 @@ export class TradeSettlementComponent {
     { value: 'hdfc', label: 'HDFC Bank' },
     { value: 'sbi', label: 'SBI Bank' },
   ];
+
+  tradeService = inject(TradeService);
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, readonly cdr: ChangeDetectorRef, private route: ActivatedRoute) {
     this.firstFormGroup = this._formBuilder.group({
@@ -216,18 +219,26 @@ export class TradeSettlementComponent {
     const existingData = this.getTradeSettlementData();
     existingData.push(newData);
     localStorage.setItem('tradeSettlementData', JSON.stringify(existingData));
+    this.tradeService.createTrade(newData).subscribe((res: any) => {
+      console.log('Save :: ', res);
+    })
     this.loadTradeData();
   }
 
   updateLocalStorage(updatedData: any, id: any) {
     const existingData = this.getTradeSettlementData();
-    const index = existingData.findIndex((item: Trade) => item.id === id);
+    const index = existingData.findIndex((item: Trade) => Number(item.id) === Number(id));
     if (index !== -1) {
       updatedData.id = id;
       existingData[index] = updatedData; // Update the existing entry
       localStorage.setItem('tradeSettlementData', JSON.stringify(existingData));
+
+      this.tradeService.updateTrade(existingData[0]).subscribe((res: any) => {
+        console.log("Update :: ", res);
+        this.loadTradeData();
+      })
     }
-    this.loadTradeData();
+
   }
 
   getTradeSettlementData() {

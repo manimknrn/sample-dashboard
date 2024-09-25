@@ -7,7 +7,7 @@ import { Trade } from '../components/shared/models/trade.model';
   providedIn: 'root'
 })
 export class TradeService {
-  private apiUrl = 'http://localhost:5000/api/trades';
+  private apiUrl = 'https://66f40d7177b5e889709811bf.mockapi.io/api/v1/trades';
 
   constructor(private http: HttpClient) { }
 
@@ -15,8 +15,28 @@ export class TradeService {
     return this.http.post<Trade>(this.apiUrl, tradeId);
   }
 
-  getTrades(): Observable<Trade[]> {
+  getTrades1(): Observable<Trade[]> {
     return this.http.get<Trade[]>('/assets/mock-service/trade-settlement.json');
+  }
+
+  getTrades(): Observable<Trade[]> {
+    return this.http.get<Trade[]>(`${this.apiUrl}`);
+  }
+
+  createTrade(data: Trade) {
+    return this.http.post<Trade[]>(`${this.apiUrl}`, data)
+  }
+
+  getTradeById(id: number): Observable<Trade> {
+    return this.http.get<Trade>(`${this.apiUrl}/${id}`);
+  }
+
+  updateTrade(data: any) {
+    return this.http.put<Trade[]>(`${this.apiUrl}/${data.id}`, data)
+  }
+
+  deleteTrade(id: number): Observable<Trade> {
+    return this.http.delete<Trade>(`${this.apiUrl}/${id}`);
   }
 
 }
