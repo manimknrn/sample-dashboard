@@ -7,6 +7,8 @@
             [actionHeader]="'Actions'" (actionFeature)="actionFeature($event)" [actionFeatureLabel]="'Create'"
             [actionFeatureFlag]="true">
         </app-general-table>
+        } @else {
+            <p>No Records Exists!</p>
         }
     </div>
 </div>

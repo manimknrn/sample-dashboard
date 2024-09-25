@@ -6,10 +6,6 @@ mat-horizontal-stepper-header-container {
     gap: 32px !important;
 }
 
-mat-form-field {
-    margin-bottom: 24px;
-    width: 100%;
-}
 
 .review {
     display: flex;
@@ -40,4 +36,13 @@ mat-form-field {
     display: flex;
     gap: 32px;
     flex-wrap: wrap;
+}
+
+.password_field {
+    width: 250px !important;
+    display: flex;
+
+    app-text-input {
+        display: flex;
+    }
 }

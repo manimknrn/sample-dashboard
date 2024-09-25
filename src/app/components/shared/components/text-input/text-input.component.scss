@@ -1,0 +1,11 @@
+@import '../../../../../assets/scss/styles/color.scss';
+button {
+    border: 0;
+    background: transparent;
+    padding: 0;
+
+    mat-icon {
+        color: $side_panel_bg;
+        font-size: 20px;
+    }
+}

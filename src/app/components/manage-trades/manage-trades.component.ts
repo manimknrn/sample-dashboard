@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,7 +18,8 @@ import { Trade } from '../shared/models/trade.model';
   standalone: true,
   providers: [
     TradeService
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManageTradesComponent implements OnInit {
   data!: Trade[]
@@ -97,6 +98,7 @@ export class ManageTradesComponent implements OnInit {
   }
 
   deleteTrade(id: number): void {
+    window.alert('Are you sure, You want to delete this record!');
     let existingData = this.getTradeSettlementData();
     existingData = existingData.filter((item: Trade) => item.id !== id); // Remove the entry with the given id
     this.data = existingData;

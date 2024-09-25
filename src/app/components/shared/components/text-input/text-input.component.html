@@ -1,4 +1,11 @@
 <mat-form-field appearance="fill">
   <mat-label>{{ label }}</mat-label>
-  <input matInput [placeholder]="placeholder" [formControl]="control" (blur)="onTouched()" />
-</mat-form-field>
+  <input [type]="inputType" matInput [placeholder]="placeholder" [formControl]="control" 
+   (blur)="onTouched()" (ngModelChange)="onInput($event)"/>
+  </mat-form-field>
+  @if(isPwdType) {
+    <!-- <button type="submit" class="submit" (click)="showCard = !showCard">{{ showCard ? 'Hide' : 'Show' }}</button> -->
+    <button mat-icon-button matSuffix (click)="toggleShowPassword()">
+      <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  }

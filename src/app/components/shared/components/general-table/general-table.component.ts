@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TableColumn } from '../../models/table.column';
 import { TableBtn } from '../../models/table-button';
@@ -16,6 +16,7 @@ import { PortalModule } from '@angular/cdk/portal';
   styleUrls: ['general-table.component.scss'],
   templateUrl: 'general-table.component.html',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTableModule, CommonModule, PortalModule, MatPaginatorModule, MatIconModule, MatTooltipModule, MatMenuModule],
 })
 export class GeneralTableComponent {

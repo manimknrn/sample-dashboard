@@ -12,11 +12,13 @@ import { SelectInputComponent } from '../components/shared/components/select-inp
 import { TextInputComponent } from '../components/shared/components/text-input/text-input.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Trade } from '../components/shared/models/trade.model';
+import { creditCardValidator } from '../components/shared/custom-validators/credit-card-validator';
 
 @Component({
   selector: 'app-trade-settlement',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatStepperModule,
     MatInputModule,
@@ -27,7 +29,8 @@ import { Trade } from '../components/shared/models/trade.model';
     NumberInputComponent,
     SelectInputComponent,
     DateInputComponent,
-    FormsModule],
+    FormsModule,
+  ],
   templateUrl: './trade-settlement.component.html',
   styleUrl: './trade-settlement.component.scss',
   providers: [
@@ -35,10 +38,11 @@ import { Trade } from '../components/shared/models/trade.model';
   ]
 })
 export class TradeSettlementComponent {
-
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   settlementFormGroup: FormGroup;
+  creditCardFormGroup: FormGroup;
+  bankTransferFormGroup: FormGroup;
   paymentMethods = [
     { value: 'creditCard', label: 'Credit Card' },
     { value: 'bankTransfer', label: 'Bank Transfer' },
@@ -47,10 +51,18 @@ export class TradeSettlementComponent {
   tradeId!: number;
   isEditMode: boolean = false;
   router = inject(Router);
+  bankName = [
+    { value: 'axis', label: 'Axis Bank' },
+    { value: 'hdfc', label: 'HDFC Bank' },
+    { value: 'sbi', label: 'SBI Bank' },
+  ];
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, readonly cdr: ChangeDetectorRef, private route: ActivatedRoute) {
     this.firstFormGroup = this._formBuilder.group({
-      stockSymbol: ['', [Validators.required, Validators.pattern('[A-Z]{1,5}')]],
+      stockSymbol: [
+        '',
+        [Validators.required, Validators.pattern('[A-Z]{1,5}')],
+      ],
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
 
@@ -65,6 +77,25 @@ export class TradeSettlementComponent {
       transactionFee: ['', [Validators.required, Validators.min(0)]],
     });
 
+    // FormGroup for credit card details
+    this.creditCardFormGroup = this._formBuilder.group({
+      cardNumber: [
+        '',
+        [Validators.required, creditCardValidator()],
+      ],
+      expiryDate: ['', Validators.required],
+      cardName: ['', Validators.required],
+      cvv: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
+      ],
+    });
+
+    this.bankTransferFormGroup = this._formBuilder.group({
+      bankName: ['', Validators.required],
+      customerId: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
 
   ngOnInit(): void {
@@ -77,7 +108,6 @@ export class TradeSettlementComponent {
 
     const data = history.state.data;
     if (data) {
-      console.log(data)
       data.settlementDate = new Date(data.settlementDate);
       this.patchFormValues(data);
     }
@@ -85,9 +115,12 @@ export class TradeSettlementComponent {
 
   patchFormValues(data: any) {
     this.firstFormGroup.patchValue(data);
-    const formattedDate = this.datePipe.transform(data.settlementDate, 'yyyy-MM-dd'); // Change the format as needed
+    const formattedDate = this.datePipe.transform(
+      data.settlementDate,
+      'yyyy-MM-dd'
+    ); // Change the format as needed
     this.secondFormGroup.patchValue({
-      settlementDate: formattedDate
+      settlementDate: formattedDate,
     });
     this.secondFormGroup.patchValue(data);
     this.settlementFormGroup.patchValue(data);
@@ -112,17 +145,43 @@ export class TradeSettlementComponent {
     return this.settlementFormGroup.get(name) as FormControl;
   }
 
+  getCreditCardControl(name: string): FormControl {
+    return this.creditCardFormGroup.get(name) as FormControl;
+  }
+
+  getBankTransferControl(name: string): FormControl {
+    return this.bankTransferFormGroup.get(name) as FormControl;
+  }
+
+  // Function to check which form fields to show
+  shouldShowCreditCardFields(): boolean {
+    return (
+      this.settlementFormGroup.get('paymentMethod')?.value === 'creditCard'
+    );
+  }
+
+  shouldShowBankTransferFields(): boolean {
+    return (
+      this.settlementFormGroup.get('paymentMethod')?.value === 'bankTransfer'
+    );
+  }
+
   onSubmit() {
-    if (this.firstFormGroup.valid && this.secondFormGroup.valid && this.settlementFormGroup.valid
+    if (this.firstFormGroup.valid && this.secondFormGroup.valid && this.settlementFormGroup.valid &&
+      (this.shouldShowCreditCardFields() ? this.creditCardFormGroup.valid : true) && 
+      (this.shouldShowBankTransferFields() ? this.bankTransferFormGroup.valid : true)
     ) {
-      const formData = { ...this.firstFormGroup.value, ...this.secondFormGroup.value, ...this.settlementFormGroup.value };
+      const formData = { ...this.firstFormGroup.value, ...this.secondFormGroup.value, ...this.settlementFormGroup.value,
+        ...(this.shouldShowCreditCardFields() ? this.creditCardFormGroup.value : {}),
+        ...(this.shouldShowBankTransferFields() ? this.bankTransferFormGroup.value : {})
+       };
       if (!!formData) {
         if (history.state.data) {
           this.updateLocalStorage(formData, history.state.data.id); // Update existing entry
         } else {
           const newTradeData = {
             id: this.generateId(),
-            ...formData
+            ...formData,
           };
           this.addToLocalStorage(newTradeData);
         }
@@ -139,7 +198,9 @@ export class TradeSettlementComponent {
 
   generateId(): number {
     const existingData = this.getTradeSettlementData();
-    return existingData.length === 0 ? 1 : Math.max(...existingData.map((item: Trade) => item.id)) + 1;
+    return existingData.length === 0
+      ? 1
+      : Math.max(...existingData.map((item: Trade) => item.id)) + 1;
   }
 
   addToLocalStorage(newData: any) {
@@ -163,5 +224,29 @@ export class TradeSettlementComponent {
   getTradeSettlementData() {
     const data = localStorage.getItem('tradeSettlementData');
     return data ? JSON.parse(data) : { data: [] };
+  }
+
+  formatCreditCardNumber(value: string): string {
+    const cleaned = value.replace(/\D/g, '');
+    const formatted = cleaned.replace(/(.{4})/g, '$1 ').trim();
+    return formatted;
+  }
+
+  onCreditCardInput(event: string) {
+    const formattedValue = this.formatCreditCardNumber(event);
+    this.creditCardFormGroup.patchValue({ cardNumber: formattedValue });
+  }
+  
+  isNextButtonDisabled(): boolean {
+    if (this.shouldShowCreditCardFields()) {
+      return (
+        this.settlementFormGroup.invalid || this.creditCardFormGroup.invalid
+      );
+    } else if (this.shouldShowBankTransferFields()) {
+      return (
+        this.settlementFormGroup.invalid || this.bankTransferFormGroup.invalid
+      );
+    }
+    return this.settlementFormGroup.invalid;
   }
 }
